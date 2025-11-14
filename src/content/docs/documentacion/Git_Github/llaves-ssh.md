@@ -3,7 +3,7 @@ title: Llaves SSH en GitHub
 description: Creacion y uso de llaves SSH para autenticarte con GitHub.
 sidebar:
     label: Llaves SSH en GitHub
-    order: 12
+    order: 15
 ---
 
 Las **llaves SSH** permiten autenticarte con GitHub (u otros remotos)

@@ -9,7 +9,7 @@ sidebar:
 Un uso común de Git es revisar el historial de cambios en un proyecto. para esto, Git proporciona el comando `git log`, que muestra una lista de todos los commits realizados en el repositorio, junto con detalles como el autor, la fecha y el mensaje del commit.
 
 :::note
-El comando `git log` muestra un listado en la terminar con un paginador propio, lo que es bueno recorar el como navegar en este paginador:
+El comando `git log` muestra un listado en la terminal con un paginador propio, lo que es bueno recorar el como navegar en este paginador:
 - Presiona  `barra espaciadora` para avanzar una página.
 - Presiona `Enter` para avanzar una línea.
 - Presiona `b` para retroceder una página.

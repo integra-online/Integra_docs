@@ -1,0 +1,124 @@
+---
+title: Comparar commits con git diff
+description: Cómo comparar commits para identificar las modificaciones.
+sidebar:
+    label: git diff (Comparar Commits)
+    order: 12
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Un uso común de Git es comprar los cambios realizados en un commit con respecto a otro, con el objetivo 
+de identificar puntualmente que se cambió. para esto. Git proporciona el comando `git diff <hash1> <hash2>`.
+
+:::note
+El comando `git diff` al igual que [git log](/Integra/documentacion/git_github/historial_commits) muestra un listado en la terminal con un paginador propio de esta, lo que es bueno recorar el como navegar en este paginador:
+- Presiona  `barra espaciadora` para avanzar una página.
+- Presiona `Enter` para avanzar una línea.
+- Presiona `b` para retroceder una página.
+- Presiona `q` para salir del paginador y volver a la línea de comandos.
+
+:::
+
+## Git diff
+
+```bash
+git diff <hash1> <hash2>
+```
+
+Esto lista los cambios entre un commit y otro. **Receurda que puedes usar [`git log`](/Integra/documentacion/git_github/historial_commits/#compacto-en-una-línea) para obtener los hashes de los commits.**
+
+![Ejemplo uso de git diff](@assets/Git_Github/git-diff-ejemplo.png)
+
+## Opciones comunes
+
+### Obtener los cambios de un archivo específico entre commits
+```bash
+
+git diff <hash1> <hash2> -- ruta/al/archivo
+```
+
+### Obtener resumen compato de los cambios
+```bash
+git diff --stat <hash1> <hash2>
+```
+![Ejemplo uso de git diff con resumen](@assets/Git_Github/git-diff-resumen.png)
+
+### Ver los avances del commit
+Hay situaciones donde solo se requiere ver los cambios introducidos por un solo commit, para esto se utiliza el mismo comando `git diff` pero se utiliza el mismo hash en ambos lugares, y se agrega un `^` al primer hash para indicar que se quiere comparar con el commit padre.:
+
+```bash
+git diff <hash>^ <hash>
+```
+
+### Comprar un commit con el estado actual
+```bash
+git diff <hash>
+```
+
+Compara el commit con el estado actual del repositorio (working directory).
+
+
+### Comprar dos ramas
+
+funciona igual que comparar dos commits, donde podemos usar las diferentes variaciones vistas:
+
+```bash
+git diff nombre_rama1 nombre_rama2
+git diff nombre_rama1 nombre_rama2 -- ruta/al/archivo
+git diff --stat nombre_rama1 nombre_rama2
+```
+
+
+## Herramienta visualización de diferencias
+
+Git también permite configurar herramientas externas para visualizar las diferencias entre commits de forma gráfica, facilitando la revisión de cambios. para usar esta herramienta se utiliza el comando `git difftool`.
+
+```bash
+git difftool <hash1> <hash2>
+```
+
+### Configurar una herramienta de diferencias
+
+Por defecto, Git no tiene una herramienta de diferencias gráfica configurada, pero permite configurar varias herramientas populares como Meld, KDiff3, Beyond Compare, entre otras. Cuando usamos el comando `git difftool` y Git no tiene una herramienta configurada, nos preguntará si queremos configurar una.
+
+![vista mensaje de difftool sin configurar](@assets/Git_Github/git-difftool-sin-configurar.png)
+
+
+para configurar la herraienta de diferencias con **VS CODE**, se puede usar los siguientes comandos:
+
+```bash
+git config --global diff.tool vscode
+git config --global difftool.prompt false
+```
+
+Configuracion para que **VS CODE** muestre las diferencias de forma correcta:
+
+<Tabs>
+  <TabItem label="Git Bash">
+    ```bash
+    git config --global difftool.vscode.cmd "code --wait --diff \"$LOCAL\" \"$REMOTE\""
+    ```
+  </TabItem>
+  <TabItem label="PowerShell">
+    ```bash
+    git config --global difftool.vscode.cmd 'code --wait --diff "$LOCAL" "$REMOTE"'
+    ```
+  </TabItem>
+</Tabs>
+
+
+Una vez configurada la herramienta, se puede usar el comando `git difftool` para ver las diferencias 
+entre commits de forma gráfica.
+
+![vista uso de difftool con VS CODE](@assets/Git_Github/git-difftool-ejemplo.png)
+
+
+
+
+
+
+
+
+
+
