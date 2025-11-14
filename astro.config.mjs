@@ -48,14 +48,6 @@ export default defineConfig({
 					label: "Documentación",
 					items: [
 						{
-							label: 'Guias',
-							collapsed: true,
-							items: [
-								// Each item here is one entry in the navigation menu.
-								{ label: 'Example Guide', slug: 'documentacion/guides/example' },
-							],
-						},
-						{
 							label: 'Contratos',
 							autogenerate: { directory: 'documentacion/Contratos' },
 						},
