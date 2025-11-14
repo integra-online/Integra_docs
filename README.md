@@ -20,8 +20,8 @@ Asegúrate de tener instalado en tu máquina:
 Clona el repositorio:
 
 ```bash
-git clone git@github.com:Felipe-Saenz01/Documentacion_Integra.git
-cd Documentacion_Integra
+git@github.com:integra-online/Integra_docs.git
+cd Integra_docs
 ```
 
 Instala las dependencias:
@@ -71,10 +71,15 @@ Documentacion_Integra/
 │   │   │   │   ├── introduccion.md
 │   │   │   │   ├── contenido.md
 │   │   │   │   ...
-│   ├── assets/          # Imágenes, videos u otros recursos
-│   │   ├── seccion1/
-│   │   ├── seccion2/
-│   │   └── ...
+│   ├── assets/                # Imágenes, videos u otros recursos
+│   │   ├── documentacion/
+│   │   │   ├── seccion1/
+│   │   │   │   ├── imagen.png
+│   │   │   │   ...
+│   │   ├── guias/
+│   │   │   ├── seccion1/
+│   │   │   │   ├── imagen.png
+│   │   │   │   ...
 │   └── config.ts        # Configuración de Astro Starlight
 └── astro.config.mjs     # Configuración del proyecto Astro
 ```
@@ -134,7 +139,7 @@ El framework con el que se desarrolló el aplicativo cuenta con varios component
 Este proyecto está configurado para desplegar en GitHub Pages. Este cuenta con un scriopt de despliegue automático en la carpeta `.github\workflows\deploy.yml`.
 El sitio se encuentra en:
 
-👉 [https://felipe-saenz01.github.io/Documentacion_Integra](https://felipe-saenz01.github.io/Documentacion_Integra)
+👉 [ver documentación](https://integra-online.github.io/Integra_docs/)
 
 Todos los cambios que se hagan en la rama `main` se desplegarán automáticamente.
 
