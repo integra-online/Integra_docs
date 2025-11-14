@@ -7,8 +7,8 @@ import starlightUtils from "@lorenzo_lewis/starlight-utils";
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://Felipe-Saenz01.github.io/Integra',
-	base: '/Integra',
+	site: 'https://integra-online.github.io/Integra_docs',
+	base: '/Integra_docs',
 	vite: {
 		resolve: {
 			alias: {
