@@ -1,0 +1,209 @@
+---
+title: Primeros pasos en la nueva vigencia del predial unificado
+description: Proceso inicial para la apertura del modulo de predial unificado en el sistema INTEGRA
+template: doc
+sidebar:
+    label: Nueva vigencia
+    order: 1
+tableofcontents: true
+lastUpdated: 2026-01-31
+---
+
+import { Tabs, TabItem, Steps, FileTree, Aside } from '@astrojs/starlight/components';
+
+En este documento se describen los pasos iniciales para la apertura del modulo de predial unificado en el sistema INTEGRA, 
+con el fin de documentar el proceso y facilitar la transición a la nueva vigencia.
+
+<Aside type="caution" title="Nota Importante">
+  Hay varios requisitos para la apertura del modulo; sin embargo el más importante es haber recibido las bases de datos del
+ **IGAC/Agencia Catastral**, sin esta no es posible empezar con la apertura.
+</Aside>
+
+---
+## Cargue y Oficialización
+
+Una vez se cuente con las bases de datos del IGAC/Agencia Catastral, se deben seguir los siguientes pasos:
+
+<Steps>
+    1. **Habilitar el modulo de predial unificado**:
+
+        Antes de iniciar el proceso de cargue, es necesario asegurarse de que el módulo de predial unificado esté habilitado en el sistema.
+        Esto para utilizar las vistas y funcionalidades relacionadas con el predial unificado, y que despues de que este liquidado el municipio
+        pueda realizar sus respectivas validaciones.
+
+    2. **Prepara las tablas que reciben la información**: 
+        
+        Antes de subir cualquier información, es necesario asegurarse de que las tablas en la base de datos estén listas para recibir los datos.
+        Esto porque existe la posibilidad que al crearse la base de datos con la nueva vigencia, algunas tablas no se hayan limpiado.
+
+        Dependiendo si es **IGAC** o **Agencia Catastral**:
+
+        <Tabs defaultValue="igac">
+            <TabItem value="igac" label="IGAC">
+                
+                Los datos del **IGAC** se almacenan en la tabla `dbo.DBIGAC`:
+
+                ```sql
+                SELECT * FROM dbo.BDIGAC;
+                DELETE FROM dbo.BDIGAC;
+                ```
+            </TabItem>
+            <TabItem value="agencia" label="Agencia Catastral">
+
+                Los datos de la **Agencia Catastral** se almacenan en la tabla `IPU.ARCHIVO_AGENCIA_CATASTRAL`:
+
+                ```sql
+                SELECT * FROM IPU.ARCHIVO_AGENCIA_CATASTRAL;
+                DELETE FROM IPU.ARCHIVO_AGENCIA_CATASTRAL;
+                ```
+            </TabItem>
+        </Tabs>
+    
+    3. **Cargar la información catrastal**:
+        
+        Una vez las tablas estén listas, se procede a cargar la información catastral utilizando los archivos recibidos del municipio, el objetivo es obtener información de:
+
+        - Predios
+        - Tipo registros
+        - Orden
+        - Total registros
+        - Nombres propietarios
+        - Tipo Documentos
+        - Números Documentos
+        - Dirección Predios
+        - Destino Económico
+        - Area Total
+        - Metros cuadrados
+        - Area Construida
+        - Avalúo Catastral
+        - Vigencia
+        - Predio Anterior
+        - Matricula Inmobiliaria
+        - Estrato
+
+        Dependiendo si es **IGAC** o **Agencia Catastral**:
+
+        <Tabs defaultValue="igac">
+            <TabItem value="igac" label="IGAC">
+                <Aside type="note" title="Estructura del Archivo">
+                El **IGAC** envia la informacion en archivos planos `txt`, estos archivos planos el contenido son lineas de texto completas de texto
+                con espacios, el sistema internamente busca y separa cada una de estas lineas en fracciones delimitadas por una cantidad especifica de
+                caracteres o columnas para obtener la informacion descrita anteriormente.
+                </Aside>
+                
+                Los que seberían recibir son:
+
+                <FileTree>
+                - NombreMunicipio_R1.txt
+                - NombreMunicipio_R2.txt
+                </FileTree>
+
+                para el cargue tenemos que ir a la funcionalidad: 
+                
+                `Predial Unificado`→`Procesos Periodicos`→`Cargar base datos IGAC`
+
+                En esta vista encontrarémos varios botones, pulsaremos `Carga IGAC Archivo R1` y cargaremos el archivo R1:
+
+                ![Cargar archivo R1 IGAC](@assets/Predial/Predial-R1.png)
+
+                **Este subirá la informacion mencionada anteriormente menos la matricula inmobiliaria y el estrato.**
+
+                Una vez se haya subido correctamente el archivo `R1`  pulsaremos `Carga IGAC Archivo R2` y cargaremos el archivo R2:
+
+                ![Cargar archivo R1 IGAC](@assets/Predial/Predial-R2.png)
+
+
+                **Este actualizará la matricula inmobiliaria y el estrato de la informacion ya subida del archivo R1**
+
+
+                <Aside type="caution" title="Nota Importante">
+                La Información del IGAC generalmente no es tan buena, por lo que es comun tener errores al proceso de cargue, es importante
+                que cuando salgan errores al cargar el archivo `R1`, se revise y se intenten identificar los errores, algunos comunes son:
+                    - Caracteres especiales en los nombres de los propietarios y/o Direcciones.
+                    - Saltos de linea dentro de los campos.
+                    - Problemas con los espacios de los campos.
+                </Aside>
+
+                <Aside type="note" title="Nota Importante">
+                **Si la calidad de la informacion del IGAC es muy mala y arreglarla representa mucho trabajo o comprometer la integridad de la informacion,
+                se deberá manifestar al municipio los problemas para que se solicite al IGAC la informacion correida.**
+
+                En caso de se intente corregir la informacion se puede hacer lo siguiente:
+                - Guardar el archivo 'R1' como un archivo en codificacion ANSI, esto generalmente remplaza los caracteres no soportados.
+                - Modificar los caracteres especiales por caracteres soportados, por ejemplo: remplazar las letras con tildes por las mismas letras sin tildes 
+                  o espacios, siempre respetando la cantidad de espacios del archivo.
+
+                - Separar la informacion manualmente en un excel, para esto es importante tener en cuenta las columnas o la cantidad de caracteres para cada campo, estos son:
+                
+                </Aside>
+
+                ### Campos y cantidad de caracteres del archivo R1:
+                | Campo               | Numero Columna | Cantidad Caracteres |
+                |---------------------|----------------|---------------------|
+                | Predio              | 0              | 30                  |
+                | Tipo Registro       | 30             | 1                   |
+                | Orden               | 31             | 3                   |
+                | Total Registros     | 34             | 3                   |
+                | Nombres Propietarios| 37             | 100                 |
+                | Tipo Documentos     | 138            | 1                   |
+                | Números Documentos  | 139            | 12                  |
+                | Dirección Predios   | 151            | 100                 |
+                | Destino Económico   | 252            | 1                   |
+                | Area Total          | 253            | 11                  |
+                | Metros cuadrados    | 264            | 4                   |
+                | Area Construida     | 268            | 6                   |
+                | Avalúo Catastral    | 274            | 15                  |
+                | Vigencia            | 289            | 8                   |
+                | Predio Anterior     | 297            | 15                  |
+
+                
+            </TabItem>
+            <TabItem value="agencia" label="Agencia Catastral">
+
+                Los datos de la **Agencia Catastral** generalmente se reciben en un archivo json, este archivo a diferencia del IGAC, tiene 
+                una estructura mas completa y con mas información:
+
+                <FileTree>
+                - Registro_Catastral.json
+                </FileTree>
+
+                Para el cargue de la información de la Agencia Catastral, se debe ir a la funcionalidad: 
+                
+                `Predial Unificado`→`Procesos Periodicos`→`Cargar base datos IGAC`
+
+                En esta vista encontraremos varios botones, pulsaremos `Carga Archivo Agencia Catastral` y cargaremos el archivo `Registro_Catastral.json`:
+
+                ![Cargar archivo Agencia Catastral](@assets/Predial/Predial-Agencia-Catastal.png)
+
+            </TabItem>
+        </Tabs>
+    
+    4. **Oficializar la información**:
+
+        Una vez se haya cargado la información, el siguiente paso es oficializarla, esto para que la información quede disponible en las vistas y funcionalidades del módulo de predial unificado, y el municipio pueda empezar a realizar sus respectivas validaciones.
+
+        Para oficializar la información, se debe ir a la funcionalidad: 
+        
+        `Predial Unificado`→`Procesos Periodicos`→`Oficializar Información`
+
+        Es la misma vista para el cargue del R1, R2 y Agencia Catastral, pero esta vez se deben pulsar el boton de Oficializar :
+
+        ![Cargar archivo Agencia Catastral](@assets/Predial/Predial-Oficializar.png)
+
+        <Aside type="note" title="Nota Importante">
+            Esto realizará varios procesos internos para oficializar la información, entre estos:
+            - Correccion de terceros con caracteres en el numero de documento.
+            - Registro de nuevos terceros.
+            - Migración de la información a la vigencia anterior.
+            - Cancelacion de predios que no se encuentren en la nueva vigencia.
+            - Actualización de la información de los predios.
+            - Actualización de la información de los Propietarios.
+            - Caracterizar los predios.
+            - Alguna otra actualizacion necesaria para oficializar la información.
+
+            Esto se encuentra en el procedimiento `SP_IPU_IGAC_BASE_DATOS` en su transacción `5`. **Si hay algun fallo en la oficializacion se debe
+            revisar el procedimiento y encontrar el problema.**
+        </Aside>
+        
+        
+</Steps>

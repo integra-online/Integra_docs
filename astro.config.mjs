@@ -52,6 +52,11 @@ export default defineConfig({
 							autogenerate: { directory: 'documentacion/Contratos' },
 						},
 						{
+							label: 'Predial Unificado',
+							badge: { text: 'Nuevo', variant: 'success' },
+							autogenerate: { directory: 'documentacion/Predial_Unificado' },
+						},
+						{
 							label: 'Git y Github',
 							badge: { text: 'Nuevo', variant: 'tip' },
 							autogenerate: { directory: 'documentacion/Git_Github' },
