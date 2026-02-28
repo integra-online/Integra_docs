@@ -25,13 +25,13 @@ con el fin de documentar el proceso y facilitar la transición a la nueva vigenc
 Una vez se cuente con las bases de datos del IGAC/Agencia Catastral, se deben seguir los siguientes pasos:
 
 <Steps>
-    1. **Habilitar el modulo de predial unificado**:
+    1. ### Habilitar el modulo de predial unificado
 
         Antes de iniciar el proceso de cargue, es necesario asegurarse de que el módulo de predial unificado esté habilitado en el sistema.
         Esto para utilizar las vistas y funcionalidades relacionadas con el predial unificado, y que despues de que este liquidado el municipio
         pueda realizar sus respectivas validaciones.
 
-    2. **Prepara las tablas que reciben la información**: 
+    2. ### Prepara las tablas que reciben la información
         
         Antes de subir cualquier información, es necesario asegurarse de que las tablas en la base de datos estén listas para recibir los datos.
         Esto porque existe la posibilidad que al crearse la base de datos con la nueva vigencia, algunas tablas no se hayan limpiado.
@@ -59,7 +59,7 @@ Una vez se cuente con las bases de datos del IGAC/Agencia Catastral, se deben se
             </TabItem>
         </Tabs>
     
-    3. **Cargar la información catrastal**:
+    3. ### Cargar la información catrastal
         
         Una vez las tablas estén listas, se procede a cargar la información catastral utilizando los archivos recibidos del municipio, el objetivo es obtener información de:
 
@@ -137,7 +137,7 @@ Una vez se cuente con las bases de datos del IGAC/Agencia Catastral, se deben se
                 
                 </Aside>
 
-                ### Campos y cantidad de caracteres del archivo R1:
+                #### Campos y cantidad de caracteres del archivo R1:
                 | Campo               | Numero Columna | Cantidad Caracteres |
                 |---------------------|----------------|---------------------|
                 | Predio              | 0              | 30                  |
@@ -177,8 +177,40 @@ Una vez se cuente con las bases de datos del IGAC/Agencia Catastral, se deben se
 
             </TabItem>
         </Tabs>
-    
-    4. **Oficializar la información**:
+
+    4.  ### Establecer parámetros base
+
+        <Aside type="note" title="Nota Importante">
+            los parametros son muy importantes para la correcta liquidación y funcionamiento del módulo, es importante que se establezcan correctamente, 
+            y que se revisen con el municipio si los valores a establecer son los correctos.
+
+            **Muchas veces no se cuenta con la información de los parámetros que el municipio va a utilizar, por lo que inicialmente para este cargue y oficializacion 
+            se establecerán igual a la vigencia anterior y luego cuando se cuente con la información se actualizará para poder liquidar.**
+        </Aside>
+
+        #### Parárametros de incentivos
+        ```sql
+        DECLARE @añoactual INT = (SELECT anoactual FROM PRESUPUESTO.PARAMETRO)
+
+        SELECT * INTO #FFFF  FROM IPU.PARAMETROS_INCENTIVOS WHERE YEAR(FECHA_DESDE)=@añoactual-1
+
+        UPDATE #FFFF 
+        SET FECHA_DESDE=REPLACE(FECHA_DESDE,@añoactual-1,@añoactual),FECHA_HASTA = REPLACE(FECHA_HASTA,@añoactual-1,@añoactual)
+
+        INSERT INTO IPU.PARAMETROS_INCENTIVOS
+        SELECT * FROM #FFFF
+        ```
+
+        #### Parámetros ambientales
+        ```sql
+        DECLARE @añoactual INT = (SELECT anoactual FROM PRESUPUESTO.PARAMETRO)
+
+        SELECT @añoactual, TIPO FROM IPU.PARAMETROS_AMBIENTAL
+        WHERE VIGENCIA=@añoactual-1
+        ```
+
+
+    5. ### Oficializar la información
 
         Una vez se haya cargado la información, el siguiente paso es oficializarla, esto para que la información quede disponible en las vistas y funcionalidades del módulo de predial unificado, y el municipio pueda empezar a realizar sus respectivas validaciones.
 
