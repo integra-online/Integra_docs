@@ -68,13 +68,23 @@ import Default from "@astrojs/starlight/components/Head.astro";
     const pathname = document.body.getAttribute("data-pathname") || window.location.pathname;
     const isInGuias = pathname.includes("/guias/");
     const siteTitle = isInGuias ? "Guías de usuario" : "Documentación Integra";
+    const siteTitleHref = isInGuias ? "/Integra_docs/guias" : "/Integra_docs";
     const titleNodes = document.querySelectorAll(
       ".nova-site-title span[translate='no'], .site-title span[translate='no']"
+    );
+    const titleLinks = document.querySelectorAll(
+      ".nova-site-title a, .site-title a, a.nova-site-title, a.site-title"
     );
 
     titleNodes.forEach((node) => {
       if (node.textContent?.trim() !== siteTitle) {
         node.textContent = siteTitle;
+      }
+    });
+
+    titleLinks.forEach((link) => {
+      if (link instanceof HTMLAnchorElement && link.getAttribute("href") !== siteTitleHref) {
+        link.setAttribute("href", siteTitleHref);
       }
     });
 
